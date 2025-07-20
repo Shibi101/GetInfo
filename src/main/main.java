@@ -1,6 +1,7 @@
 package main;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -28,6 +29,15 @@ public class main {
 			System.out.println(netint.getDisplayName());
 		}
 		
+		//make string to store localadress which reaches 8.8.8.8
+		String ipadres;
+		
+		//create socket which connects to 8.8.8.8 (google)
+		try(final DatagramSocket socket = new DatagramSocket()){
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ipadres = socket.getLocalAddress().getHostAddress();
+		}
+		
 		JFrame frame = new JFrame("IP adress");
 		JLabel OsName = new JLabel(("OS name: " + System.getProperty("os.name")));
 		JLabel OsVersion = new JLabel(("OS version: " + System.getProperty("os.version")));
@@ -36,9 +46,11 @@ public class main {
 		List<String> ipAddresses = getIpAddresses(!INCLUDE_LINK_LOCAL, !INCLUDE_LOOPBACK);
 		ipAddresses.forEach(System.out::println);
 		
-		String NetworkIp = ipAddresses.get(2);
+		InetAddress myIP = InetAddress.getLocalHost();
+		System.out.println(myIP.getHostAddress());
 		
-		JLabel IP = new JLabel("ip address: " + NetworkIp);
+		String Ip = ExtractIp(ipAddresses);
+		JLabel IP = new JLabel("local IP: " + ipadres);
 		
 		frame.add(OsName);
 		frame.add(OsVersion);
