@@ -1,6 +1,8 @@
 package main;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -13,6 +15,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -29,14 +32,15 @@ public class main {
 			System.out.println(netint.getDisplayName());
 		}
 		
-		//make string to store localadress which reaches 8.8.8.8
-		String ipadres;
+		String Lanip;
+		Lanip = getIp();
 		
-		//create socket which connects to 8.8.8.8 (google)
-		try(final DatagramSocket socket = new DatagramSocket()){
-			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-			ipadres = socket.getLocalAddress().getHostAddress();
-		}
+		JButton RefreshButton = new JButton("refresh");
+		RefreshButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Lanip = getIp();
+			}
+		});
 		
 		JFrame frame = new JFrame("IP adress");
 		JLabel OsName = new JLabel(("OS name: " + System.getProperty("os.name")));
@@ -50,16 +54,29 @@ public class main {
 		System.out.println(myIP.getHostAddress());
 		
 		String Ip = ExtractIp(ipAddresses);
-		JLabel IP = new JLabel("local IP: " + ipadres);
+		JLabel IP = new JLabel("local IP: " + Lanip);
 		
 		frame.add(OsName);
 		frame.add(OsVersion);
 		frame.add(OsArch);
 		frame.add(IP);
+		frame.add(RefreshButton);
 		frame.setSize(600,400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 
+	}
+	
+	public static String getIp() throws SocketException, UnknownHostException {
+		//make string to store localadress which reaches 8.8.8.8
+		String ipadres;
+		
+		//create socket which connects to 8.8.8.8 (google)
+		try(final DatagramSocket socket = new DatagramSocket()){
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ipadres = socket.getLocalAddress().getHostAddress();
+		}
+		return ipadres;
 	}
 	
 	private static List<String> getIpAddresses(boolean includeLinkLocal, boolean includeLoopback)throws SocketException {
