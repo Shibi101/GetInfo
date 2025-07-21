@@ -1,8 +1,9 @@
 package main;
-import java.awt.FlowLayout;
+// je kan imports opschonen
+import java.awt.FlowLayout; // never used
 import java.awt.GridLayout;
 import java.net.DatagramSocket;
-import java.net.Inet4Address;
+import java.net.Inet4Address; // never used
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
