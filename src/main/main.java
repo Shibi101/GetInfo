@@ -22,14 +22,14 @@ public class main {
 	private static final boolean INCLUDE_LOOPBACK = true;
 	
 	public static void main(String[] args) throws UnknownHostException, SocketException {
-		
-		InetAddress IAddress = InetAddress.getLocalHost();
+		// Waar wordt deze voor gebruikt ??
+//		InetAddress IAddress = InetAddress.getLocalHost();
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		for(NetworkInterface netint : Collections.list(interfaces)) {
 			System.out.println(netint.getDisplayName());
 		}
 		
-		//make string to store localadress which reaches 8.8.8.8
+		//make string to store local-adress which reaches 8.8.8.8
 		String ipadres;
 		
 		//create socket which connects to 8.8.8.8 (google)
@@ -48,8 +48,8 @@ public class main {
 		
 		InetAddress myIP = InetAddress.getLocalHost();
 		System.out.println(myIP.getHostAddress());
-		
-		String Ip = ExtractIp(ipAddresses);
+		// waar wordt deze voor gebruikt ??
+//		String Ip = ExtractIp(ipAddresses);
 		JLabel IP = new JLabel("local IP: " + ipadres);
 		
 		frame.add(OsName);
@@ -66,28 +66,38 @@ public class main {
 		List<String> ipAddresses = new ArrayList<>();
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		while (interfaces.hasMoreElements()) {
-			for(InterfaceAddress interfaceAddress : interfaces.nextElement().getInterfaceAddresses()) {
+//			kan cleaner
+//			for(InterfaceAddress interfaceAddress : interfaces.nextElement().getInterfaceAddresses()) {
+//				InetAddress addr = interfaceAddress.getAddress();
+//				boolean include = true;
+//				if(addr.isLinkLocalAddress() && !includeLinkLocal) {
+//					include = false;
+//				}
+//				if(addr.isLoopbackAddress() && ! includeLoopback) {
+//					include = false;
+//				}
+//				if(include) {
+//					ipAddresses.add(addr.toString().substring(1));
+//				}
+//			}
+			
+			NetworkInterface netint = interfaces.nextElement();
+			for (InterfaceAddress interfaceAddress : netint.getInterfaceAddresses()) {
 				InetAddress addr = interfaceAddress.getAddress();
-				boolean include = true;
-				if(addr.isLinkLocalAddress() && !includeLinkLocal) {
-					include = false;
-				}
-				if(addr.isLoopbackAddress() && ! includeLoopback) {
-					include = false;
-				}
-				if(include) {
-					ipAddresses.add(addr.toString().substring(1));
-				}
+				if (addr.isLinkLocalAddress() && !includeLinkLocal) continue;
+				if (addr.isLoopbackAddress() && !includeLoopback) continue;
+				ipAddresses.add(addr.getHostAddress());
 			}
 		}
 		return ipAddresses;
 	}
 	
-	public static String ExtractIp(List<String> ipAddresses) {
-		for(String ip : ipAddresses) {
-			return ip;
-		}
-		return null;
-		
-	}
+	// is deze wel gebruikt ??
+//	public static String ExtractIp(List<String> ipAddresses) {
+//		for(String ip : ipAddresses) {
+//			return ip;
+//		}
+//		return null;
+//		
+//	}
 }
